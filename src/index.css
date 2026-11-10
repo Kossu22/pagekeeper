@@ -1,6 +1,7 @@
 body {
   background-color: #f8f9fa;
 }
+
 .book-cover {
   aspect-ratio: 2 / 3;
   object-fit: cover;
@@ -13,4 +14,8 @@ body {
   justify-content: center;
   background-color: #e9ecef;
   color: #6c757d;
+}
+
+.book-description {
+  white-space: pre-line;
 }

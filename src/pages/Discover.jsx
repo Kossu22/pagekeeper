@@ -4,8 +4,8 @@ import Button from 'react-bootstrap/Button'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Spinner from 'react-bootstrap/Spinner'
-import Alert from 'react-bootstrap/Alert'
+import Loader from '../components/Loader'
+import ErrorMessage from '../components/ErrorMessage'
 import { Search } from 'react-bootstrap-icons'
 import { searchBooks } from '../api/openLibrary'
 import BookCard from '../components/BookCard'
@@ -16,6 +16,26 @@ function Discover() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [hasSearched, setHasSearched] = useState(false)
+
+  async function runSearch() {
+  const trimmed = query.trim()
+  if (!trimmed) return
+
+  setLoading(true)
+  setError(null)
+
+  try {
+    const results = await searchBooks(trimmed)
+    setBooks(results)
+  } catch (err) {
+    console.error(err)
+    setBooks([])
+    setError('Could not reach Open Library. Check your connection and try again.')
+  } finally {
+    setLoading(false)
+    setHasSearched(true)
+  }
+}
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -58,15 +78,9 @@ function Discover() {
         </InputGroup>
       </Form>
 
-      {loading && (
-        <div className="text-center my-5">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </div>
-      )}
+      {loading && <Loader text="Searching Open Library..." />}
 
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error && <ErrorMessage message={error} onRetry={runSearch} />}
 
       {!loading && !error && hasSearched && books.length === 0 && (
         <p className="text-muted">No books found. Try a different search.</p>
