@@ -5,10 +5,12 @@ import Discover from './pages/Discover'
 import BookDetails from './pages/BookDetails'
 import MyShelves from './pages/MyShelves'
 import NotFound from './pages/NotFound'
+import AppNavbar from './components/AppNavbar'
 
 function App() {
   return (
     <div className="d-flex flex-column min-vh-100">
+      <AppNavbar />
       <main className="flex-grow-1 py-4">
         <Container>
           <Routes>
