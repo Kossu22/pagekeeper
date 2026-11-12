@@ -20,9 +20,9 @@ function ShelfStats({ books }) {
         <p className="text-muted small">
           {finishedThisYear} {finishedThisYear === 1 ? 'book' : 'books'} finished in {currentYear}
         </p>
-        <div style={{ width: '100%', height: 220 }}>
+        <div style={{ width: '100%', height: 220 }} aria-hidden="true">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+            <BarChart data={data} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }} accessibilityLayer={false}>
               <CartesianGrid strokeDasharray="3 3" horizontal={false} />
               <XAxis type="number" allowDecimals={false} />
               <YAxis type="category" dataKey="name" width={100} tick={{ fontSize: 13 }} />
