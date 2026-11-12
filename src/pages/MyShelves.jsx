@@ -6,6 +6,7 @@ import Badge from 'react-bootstrap/Badge'
 import { SHELVES } from '../data/shelves'
 import { useShelves } from '../hooks/useShelves'
 import BookCard from '../components/BookCard'
+import ShelfStats from '../components/ShelfStats'
 
 function MyShelves() {
   const { library } = useShelves()
@@ -35,6 +36,8 @@ function MyShelves() {
           <p className="text-muted">
             {books.length} {books.length === 1 ? 'book' : 'books'} in your library
           </p>
+
+          <ShelfStats books={books} />
 
           <Nav
             variant="pills"
