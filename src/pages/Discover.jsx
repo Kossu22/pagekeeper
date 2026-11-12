@@ -10,12 +10,24 @@ import { Search } from 'react-bootstrap-icons'
 import { searchBooks } from '../api/openLibrary'
 import BookCard from '../components/BookCard'
 
+const SEARCH_STORAGE_KEY = 'pagekeeper-last-search'
+
+function loadLastSearch() {
+  try {
+    const saved = sessionStorage.getItem(SEARCH_STORAGE_KEY)
+    return saved ? JSON.parse(saved) : null
+  } catch {
+    return null
+  }
+}
+
 function Discover() {
-  const [query, setQuery] = useState('')
-  const [books, setBooks] = useState([])
+  const [lastSearch] = useState(loadLastSearch)
+  const [query, setQuery] = useState(lastSearch?.query ?? '')
+  const [books, setBooks] = useState(lastSearch?.books ?? [])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [hasSearched, setHasSearched] = useState(false)
+  const [hasSearched, setHasSearched] = useState(lastSearch !== null)
 
   async function runSearch() {
   const trimmed = query.trim()
@@ -45,18 +57,23 @@ function Discover() {
     setLoading(true)
     setError(null)
 
+  try {
+    const results = await searchBooks(trimmed)
+    setBooks(results)
     try {
-      const results = await searchBooks(trimmed)
-      setBooks(results)
-    } catch (err) {
-      console.error(err)
-      setBooks([])
-      setError('Could not reach Open Library. Check your connection and try again.')
-    } finally {
-      setLoading(false)
-      setHasSearched(true)
+      sessionStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify({ query: trimmed, books: results }))
+    } catch {
+      // Storage unavailable, search still works without it
     }
+  } catch (err) {
+    console.error(err)
+    setBooks([])
+    setError('Could not reach Open Library. Check your connection and try again.')
+  } finally {
+    setLoading(false)
+    setHasSearched(true)
   }
+}
 
   return (
     <>
