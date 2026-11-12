@@ -1,4 +1,5 @@
 import Dropdown from 'react-bootstrap/Dropdown'
+import toast from 'react-hot-toast'
 import { SHELVES } from '../data/shelves'
 import { useShelves } from '../hooks/useShelves'
 
@@ -6,6 +7,21 @@ function ShelfSelect({ book, size = 'sm' }) {
   const { getShelf, setShelf, removeBook } = useShelves()
   const currentShelf = getShelf(book.id)
   const currentLabel = SHELVES.find((shelf) => shelf.id === currentShelf)?.label
+
+  function handleSelect(shelf) {
+    if (shelf.id === currentShelf) return
+    setShelf(book, shelf.id)
+    toast.success(
+      currentShelf
+        ? `Moved "${book.title}" to ${shelf.label}`
+        : `Added "${book.title}" to ${shelf.label}`,
+    )
+  }
+
+  function handleRemove() {
+    removeBook(book.id)
+    toast(`Removed "${book.title}" from your library`)
+  }
 
   return (
     <Dropdown>
@@ -22,7 +38,7 @@ function ShelfSelect({ book, size = 'sm' }) {
           <Dropdown.Item
             key={shelf.id}
             active={shelf.id === currentShelf}
-            onClick={() => setShelf(book, shelf.id)}
+            onClick={() => handleSelect(shelf)}
           >
             {shelf.label}
           </Dropdown.Item>
@@ -31,7 +47,7 @@ function ShelfSelect({ book, size = 'sm' }) {
         {currentShelf && (
           <>
             <Dropdown.Divider />
-            <Dropdown.Item className="text-danger" onClick={() => removeBook(book.id)}>
+            <Dropdown.Item className="text-danger" onClick={handleRemove}>
               Remove from library
             </Dropdown.Item>
           </>

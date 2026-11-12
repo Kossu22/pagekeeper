@@ -6,6 +6,7 @@ import BookDetails from './pages/BookDetails'
 import MyShelves from './pages/MyShelves'
 import NotFound from './pages/NotFound'
 import AppNavbar from './components/AppNavbar'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         </Container>
       </main>
       <Footer />
+      <Toaster position="bottom-center" />
     </div>
   )
 }
